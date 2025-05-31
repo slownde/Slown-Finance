@@ -1,0 +1,33 @@
+﻿shop:
+  hologram:
+    item-height: 1.0
+    price-height: 0.5
+    owner-height: 0.8
+    sell-height: 1.1
+    rotation-speed: 1.5
+    rotation-interval: 2
+    view-distance: 100
+  protection:
+    explosion-protection: true
+    admin-bypass: true
+    owner-shift-destroy: true
+    prevent-hopper: true
+    prevent-redstone: true
+  display:
+    show-item-amount: true
+    buy-format: "§aBuy: §6{amount}x §7für §a{price} Coins"
+    sell-format: "§cSell: §6{amount}x §7für §c{price} Coins"
+    owner-format: "§7Shop von §6{owner}"
+    currency-symbol: "Coins"
+    decimal-places: 2
+
+performance:
+  save-interval: 300
+  cleanup-interval: 600
+  hologram-tick-rate: 2
+
+debug:
+  enabled: false
+  log-packets: false
+  log-shop-interactions: false
+  log-hologram-updates: false

@@ -1,0 +1,21 @@
+﻿name: Slown-Finance
+version: '1.0'
+main: de.syscall.SlownFinance
+api-version: '1.21'
+authors: [80x0]
+description: Shop System für das Slown Network
+website: https://slown.de
+depend: [Slown-Vectur, ProtocolLib]
+
+permissions:
+  slownfinance.*:
+    description: Alle Permissions
+    default: op
+  slownfinance.shop.admin:
+    description: Shop-System verwalten
+    default: op
+
+commands:
+  shop:
+    description: Shop-System verwalten
+    usage: /shop <create|delete|list|info|toggle|reload>
