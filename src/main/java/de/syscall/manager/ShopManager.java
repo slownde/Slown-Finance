@@ -176,7 +176,7 @@ public class ShopManager {
         }
 
         double totalPrice = shop.getBuyPrice();
-        if (!plugin.getVecturAPI().hasBankCoins(buyer, totalPrice)) {
+        if (!plugin.getVecturAPI().hasCoins(buyer, totalPrice)) {
             buyer.sendMessage(ColorUtil.component("&cDu hast nicht genug Coins! Benötigt: " +
                     String.format("%.2f", totalPrice)));
             return false;
@@ -205,8 +205,8 @@ public class ShopManager {
         purchasedItems.setAmount(shop.getAmount());
         buyer.getInventory().addItem(purchasedItems);
 
-        plugin.getVecturAPI().removeCoins(buyer, (int) totalPrice);
-        plugin.getVecturAPI().addCoins(plugin.getServer().getPlayer(shop.getOwner()), (int) totalPrice);
+        plugin.getVecturAPI().removeCoins(buyer, totalPrice);
+        plugin.getVecturAPI().getCoinManager().addCoins(shop.getOwner(), totalPrice);
 
         buyer.sendMessage(ColorUtil.component("&aKauf erfolgreich! &7Bezahlt: &6" +
                 String.format("%.2f", totalPrice) + " Coins"));
@@ -243,13 +243,7 @@ public class ShopManager {
             return false;
         }
 
-        Player owner = plugin.getServer().getPlayer(shop.getOwner());
-        if (owner == null) {
-            seller.sendMessage(ColorUtil.component("&cShop-Besitzer ist nicht online!"));
-            return false;
-        }
-
-        if (!plugin.getVecturAPI().hasBankCoins(owner, (int) shop.getSellPrice())) {
+        if (!plugin.getVecturAPI().getCoinManager().hasBankCoins(shop.getOwner(), shop.getSellPrice())) {
             seller.sendMessage(ColorUtil.component("&cShop-Besitzer hat nicht genug Coins in der Bank!"));
             return false;
         }
@@ -260,18 +254,14 @@ public class ShopManager {
         soldItems.setAmount(shop.getAmount());
         chestInventory.addItem(soldItems);
 
-        plugin.getVecturAPI().getPlayerData(owner).removeBankCoins((int) shop.getSellPrice());
-        plugin.getVecturAPI().getDatabaseManager().savePlayerData(plugin.getVecturAPI().getPlayerData(owner));
-        plugin.getVecturAPI().addCoins(seller, (int) shop.getSellPrice());
-
-        if (owner.isOnline()) {
-            plugin.getVecturAPI().getScoreboardManager().updateBoard(owner);
-        }
+        plugin.getVecturAPI().getCoinManager().removeBankCoins(shop.getOwner(), shop.getSellPrice());
+        plugin.getVecturAPI().addCoins(seller, shop.getSellPrice());
 
         seller.sendMessage(ColorUtil.component("&aVerkauf erfolgreich! &7Erhalten: &6" +
                 String.format("%.2f", shop.getSellPrice()) + " Coins"));
 
-        if (owner.isOnline()) {
+        Player owner = plugin.getServer().getPlayer(shop.getOwner());
+        if (owner != null && owner.isOnline()) {
             owner.sendMessage(ColorUtil.component("&a" + seller.getName() + " &7hat Items an deinen Shop &6" +
                     shop.getName() + " &7verkauft! &cBezahlt: &6" + String.format("%.2f", shop.getSellPrice()) + " Coins"));
         }
